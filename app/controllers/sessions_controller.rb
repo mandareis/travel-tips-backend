@@ -5,6 +5,7 @@ class SessionsController < ApplicationController
                :ok => true,
                :user_id => session[:user_id],
                :username => session[:username],
+               :name => session[:name],
              }
     else
       render json: { :ok => false }
@@ -23,7 +24,8 @@ class SessionsController < ApplicationController
     end
     session[:user_id] = user.id
     session[:username] = user.username
-    render json: { :ok => true, :user_id => user.id, :username => user.username }
+    session[:name] = user.name
+    render json: { :ok => true, :user_id => user.id, :username => user.username, :name => user.name }
   end
 
   def destroy

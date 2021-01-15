@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   resources :likes
   resources :comments
   resources :votes
-  resources :users, only: [:create]
+  resources :users, only: [:create, :update, :destroy]
   resources :sessions, only: [:create, :index, :destroy]
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
