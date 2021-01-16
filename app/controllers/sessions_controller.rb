@@ -28,6 +28,23 @@ class SessionsController < ApplicationController
     render json: { :ok => true, :user_id => user.id, :username => user.username, :name => user.name }
   end
 
+  def register
+    user = User.create({
+      "name" => params[:name],
+      "username" => params[:username],
+      "email" => params[:email],
+      "password" => params[:password],
+    })
+    if not user
+      render json: { :error => user.errors.full_messages[0] }, status: 400
+      return
+    end
+    session[:user_id] = user.id
+    session[:username] = user.username
+    session[:name] = user.name
+    render json: { :ok => true, :user_id => user.id, :username => user.username, :name => user.name }
+  end
+
   def destroy
     reset_session
   end
