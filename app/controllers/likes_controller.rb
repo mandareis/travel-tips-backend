@@ -1,5 +1,5 @@
 class LikesController < ApplicationController
-  before_action :set_like, only: [:show, :update, :destroy]
+  before_action :check_auth
 
   # GET /likes
   def index
@@ -26,6 +26,7 @@ class LikesController < ApplicationController
 
   # PATCH/PUT /likes/1
   def update
+    like = Like.find(params[:id])
     if @like.update(like_params)
       render json: @like
     else
@@ -37,15 +38,4 @@ class LikesController < ApplicationController
   def destroy
     @like.destroy
   end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_like
-      @like = Like.find(params[:id])
-    end
-
-    # Only allow a trusted parameter "white list" through.
-    def like_params
-      params.require(:like).permit(:comment_id, :user_id)
-    end
 end

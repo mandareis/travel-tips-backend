@@ -1,6 +1,5 @@
 class VotesController < ApplicationController
-  before_action :set_vote, only: [:show, :update, :destroy]
-
+  before_action :check_auth
   # GET /votes
   def index
     @votes = Vote.all
@@ -26,6 +25,7 @@ class VotesController < ApplicationController
 
   # PATCH/PUT /votes/1
   def update
+    vote = Vote.find(params[:id])
     if @vote.update(vote_params)
       render json: @vote
     else
@@ -37,15 +37,4 @@ class VotesController < ApplicationController
   def destroy
     @vote.destroy
   end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_vote
-      @vote = Vote.find(params[:id])
-    end
-
-    # Only allow a trusted parameter "white list" through.
-    def vote_params
-      params.require(:vote).permit(:user_id, :suggestion_id)
-    end
 end

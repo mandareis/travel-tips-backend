@@ -1,6 +1,5 @@
 class PlacesController < ApplicationController
-  before_action :set_place, only: [:show, :update, :destroy]
-
+  before_action :check_auth
   # GET /places
   def index
     @places = Place.all
@@ -26,6 +25,7 @@ class PlacesController < ApplicationController
 
   # PATCH/PUT /places/1
   def update
+    @place = Place.find(params[:id])
     if @place.update(place_params)
       render json: @place
     else
@@ -37,15 +37,4 @@ class PlacesController < ApplicationController
   def destroy
     @place.destroy
   end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_place
-      @place = Place.find(params[:id])
-    end
-
-    # Only allow a trusted parameter "white list" through.
-    def place_params
-      params.fetch(:place, {})
-    end
 end

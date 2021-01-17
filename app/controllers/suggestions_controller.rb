@@ -1,6 +1,5 @@
 class SuggestionsController < ApplicationController
-  before_action :set_suggestion, only: [:show, :update, :destroy]
-
+  before_action :check_auth
   # GET /suggestions
   def index
     @suggestions = Suggestion.all
@@ -26,6 +25,7 @@ class SuggestionsController < ApplicationController
 
   # PATCH/PUT /suggestions/1
   def update
+    suggestion = Suggestion.find(params[:id])
     if @suggestion.update(suggestion_params)
       render json: @suggestion
     else
@@ -37,15 +37,4 @@ class SuggestionsController < ApplicationController
   def destroy
     @suggestion.destroy
   end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_suggestion
-      @suggestion = Suggestion.find(params[:id])
-    end
-
-    # Only allow a trusted parameter "white list" through.
-    def suggestion_params
-      params.require(:suggestion).permit(:place_id)
-    end
 end

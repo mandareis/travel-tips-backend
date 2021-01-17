@@ -1,17 +1,21 @@
 class SessionsController < ApplicationController
   def index
     if session[:user_id]
+      user = User.find(session[:user_id])
+
       render json: {
                :ok => true,
                :user_id => session[:user_id],
-               :username => session[:username],
-               :name => session[:name],
+               :username => user.username,
+               :name => user.name,
+               :email => user.email,
              }
     else
       render json: { :ok => false }
     end
   end
 
+  # create user's session
   def create
     user = User.find_by(username: params["username"])
     if not user
@@ -23,11 +27,10 @@ class SessionsController < ApplicationController
       return
     end
     session[:user_id] = user.id
-    session[:username] = user.username
-    session[:name] = user.name
-    render json: { :ok => true, :user_id => user.id, :username => user.username, :name => user.name }
+    render json: { :ok => true, :user_id => user.id, :username => user.username, :name => user.name, :email => user.email }
   end
 
+  # create user
   def register
     user = User.create({
       "name" => params[:name],
@@ -36,16 +39,36 @@ class SessionsController < ApplicationController
       "password" => params[:password],
     })
     if not user
-      render json: { :error => user.errors.full_messages[0] }, status: 400
+      render json: { :ok => false, :error => user.errors.full_messages[0] }, status: 400
       return
     end
     session[:user_id] = user.id
-    session[:username] = user.username
-    session[:name] = user.name
-    render json: { :ok => true, :user_id => user.id, :username => user.username, :name => user.name }
+    render json: { :ok => true, :user_id => user.id, :username => user.username, :name => user.name, :email => user.email }
   end
 
+  def dump_session
+    render json: session
+  end
+
+  def bootstrap_js_data
+    data = nil
+    if session[:user_id]
+      user = User.find(session[:user_id])
+      data = {
+        :user_id => session[:user_id],
+        :username => user.username,
+        :name => user.name,
+        :email => user.email,
+      }
+    end
+    render :js => "window._bootstrap_data = JSON.parse('#{data.to_json}');"
+  end
+
+  #logs out user
   def destroy
     reset_session
+    render json: {
+             status: 200,
+           }
   end
 end

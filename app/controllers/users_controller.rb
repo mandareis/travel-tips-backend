@@ -1,12 +1,9 @@
 class UsersController < ApplicationController
-  def edit
-    render json: user, except: [:password_digest]
-  end
+  before_action :check_auth, only: [:update, :change_password, :destroy]
 
   # PATCH/PUT /users/1
   def update
-    user = User.find(params[:id])
-
+    user = User.find(session[:user_id])
     user.update({
       "name" => params[:name],
       "username" => params[:username],
@@ -20,9 +17,9 @@ class UsersController < ApplicationController
     render json: user, except: [:password_digest]
   end
 
-  # PATCH/PUT for user's password
+  # PATCH/PUT /user/1/change_password for user's password
   def change_password
-    user = User.find(params[:id])
+    user = User.find(session[:user_id])
     if not user.authenticate(params[:old_password])
       render json: { :error => "Password incorrect" }, status: 401
       return
@@ -37,8 +34,17 @@ class UsersController < ApplicationController
 
   # DELETE /users/1
   def destroy
-    user = User.find(params[:id])
-    user.destroy
-    render json: user
+    begin
+      user = User.find(session[:user_id])
+      suggestion = Suggestion.where("user_id = ?", params[:id]).update_all(user_id: "21")
+      vote = Vote.where("user_id = ?", params[:id]).update_all(user_id: "21")
+      comment = Comment.where("user_id = ?", params[:id]).update_all(user_id: "21")
+      like = Like.where("user_id = ?", params[:id]).update_all(user_id: "21")
+    rescue
+      render json: { :error => "User Not Found" }, status: 404
+    else
+      user.destroy
+      render json: user
+    end
   end
 end

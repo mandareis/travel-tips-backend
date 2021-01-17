@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_action :set_comment, only: [:show, :update, :destroy]
+  before_action :check_auth
 
   # GET /comments
   def index
@@ -26,6 +26,7 @@ class CommentsController < ApplicationController
 
   # PATCH/PUT /comments/1
   def update
+    comment = Comment.find(params[:id])
     if @comment.update(comment_params)
       render json: @comment
     else
@@ -37,15 +38,4 @@ class CommentsController < ApplicationController
   def destroy
     @comment.destroy
   end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_comment
-      @comment = Comment.find(params[:id])
-    end
-
-    # Only allow a trusted parameter "white list" through.
-    def comment_params
-      params.require(:comment).permit(:user_id, :suggestion_id)
-    end
 end
