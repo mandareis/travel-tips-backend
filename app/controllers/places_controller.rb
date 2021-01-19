@@ -10,7 +10,7 @@ class PlacesController < ApplicationController
   end
 
   def countries_list
-    render json: ISO3166::Country.all.map { |c| { :country => c.name, :code => c.alpha2, :continent => c.region } }
+    render json: ISO3166::Country.all.map { |c| { :country => c.name, :code => c.alpha2, :continent => c.region } }.sort_by!
   end
 
   # GET /places/1

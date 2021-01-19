@@ -1,25 +1,43 @@
 class SuggestionsController < ApplicationController
   before_action :check_auth
   # GET /suggestions
-  def index
-    suggestions = Suggestion.all
+  # def index
+  #   suggestions = Suggestion.all
 
-    render json: suggestions
-  end
+  #   render json: suggestions
+  # end
 
-  # GET /suggestions/1
-  def show
-    render json: @suggestion
-  end
+  # # GET /suggestions/1
+  # def show
+  #   render json: @suggestion
+  # end
 
   # POST /suggestions
   def create
+    place = Place.new do |p|
+      p.continent = params[:place][:continent]
+      p.country = params[:place][:country]
+      p.name = params[:place][:name]
+      p.city = params[:place][:city]
+    end
+
+    if not place.valid?
+      render json: { :ok => false, :error => place.errors.full_messages.join("; ") }, status: 400
+      return
+    end
+    if not place.save
+      render json: { :ok => false, :error => "Failed to save place" }, status: 500
+      return
+    end
+
     suggestion = Suggestion.new do |s|
       s.title = params[:title]
       s.description = params[:description]
       s.labels = params[:labels]
       s.user_id = session[:user_id]
+      s.place = place
     end
+
     if not suggestion.valid?
       render json: { :ok => false, :error => suggestion.errors.full_messages.join("; ") }, status: 400
       return
