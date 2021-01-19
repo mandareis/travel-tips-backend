@@ -2,9 +2,9 @@ class SuggestionsController < ApplicationController
   before_action :check_auth
   # GET /suggestions
   def index
-    @suggestions = Suggestion.all
+    suggestions = Suggestion.all
 
-    render json: @suggestions
+    render json: suggestions
   end
 
   # GET /suggestions/1
@@ -14,13 +14,21 @@ class SuggestionsController < ApplicationController
 
   # POST /suggestions
   def create
-    @suggestion = Suggestion.new(suggestion_params)
-
-    if @suggestion.save
-      render json: @suggestion, status: :created, location: @suggestion
-    else
-      render json: @suggestion.errors, status: :unprocessable_entity
+    suggestion = Suggestion.new do |s|
+      s.title = params[:title]
+      s.description = params[:description]
+      s.labels = params[:labels]
+      s.user_id = session[:user_id]
     end
+    if not suggestion.valid?
+      render json: { :ok => false, :error => suggestion.errors.full_messages.join("; ") }, status: 400
+      return
+    end
+    if not suggestion.save
+      render json: { :ok => false, :error => "Failed to save suggestion" }, status: 500
+      return
+    end
+    render json: suggestion
   end
 
   # PATCH/PUT /suggestions/1

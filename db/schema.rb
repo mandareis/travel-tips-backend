@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 2021_01_11_215130) do
   create_table "places", force: :cascade do |t|
     t.string "continent", null: false
     t.string "country", null: false
+    t.string "name", null: false
     t.string "city"
     t.string "admin_area"
     t.string "neighborhood"
@@ -48,6 +49,7 @@ ActiveRecord::Schema.define(version: 2021_01_11_215130) do
   create_table "suggestions", force: :cascade do |t|
     t.string "title"
     t.string "description"
+    t.string "labels"
     t.bigint "place_id", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false

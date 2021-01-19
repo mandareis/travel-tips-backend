@@ -3,6 +3,7 @@ class CreateSuggestions < ActiveRecord::Migration[6.0]
     create_table :suggestions do |t|
       t.string :title
       t.string :description
+      t.string :labels
       t.references :place, null: false, foreign_key: true
       t.references :user, null: false, foreign_key: true
 

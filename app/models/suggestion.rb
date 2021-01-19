@@ -4,5 +4,4 @@ class Suggestion < ApplicationRecord
   has_many :comments
   has_many :users, through: :comments
   has_many :votes
-  has_many :users, through: :votes
 end
