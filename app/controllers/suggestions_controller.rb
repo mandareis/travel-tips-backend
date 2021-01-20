@@ -1,16 +1,17 @@
 class SuggestionsController < ApplicationController
-  before_action :check_auth
+  before_action :check_auth, only: [:create]
   # GET /suggestions
-  # def index
-  #   suggestions = Suggestion.all
+  def index
+    suggestions = Suggestion.all
 
-  #   render json: suggestions
-  # end
+    render json: suggestions
+  end
 
-  # # GET /suggestions/1
-  # def show
-  #   render json: @suggestion
-  # end
+  # GET /suggestions/1
+  def show
+    suggestion = Suggestion.find(params[:id])
+    render json: suggestion
+  end
 
   # POST /suggestions
   def create
@@ -50,17 +51,17 @@ class SuggestionsController < ApplicationController
   end
 
   # PATCH/PUT /suggestions/1
-  def update
-    suggestion = Suggestion.find(params[:id])
-    if @suggestion.update(suggestion_params)
-      render json: @suggestion
-    else
-      render json: @suggestion.errors, status: :unprocessable_entity
-    end
-  end
+  # def update
+  #   suggestion = Suggestion.find(params[:id])
+  #   if @suggestion.update(suggestion_params)
+  #     render json: @suggestion
+  #   else
+  #     render json: @suggestion.errors, status: :unprocessable_entity
+  #   end
+  # end
 
-  # DELETE /suggestions/1
-  def destroy
-    @suggestion.destroy
-  end
+  # # DELETE /suggestions/1
+  # def destroy
+  #   @suggestion.destroy
+  # end
 end

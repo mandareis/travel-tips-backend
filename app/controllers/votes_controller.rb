@@ -1,40 +1,43 @@
 class VotesController < ApplicationController
-  before_action :check_auth
+  before_action :check_auth, only: [:create]
   # GET /votes
   def index
-    @votes = Vote.all
+    votes = Vote.where(user_id: session[:user_id])
 
-    render json: @votes
+    render json: votes
   end
 
-  # GET /votes/1
+  # # GET /suggestions/:id/vote
   def show
-    render json: @vote
+    pp params
+    vote = Vote.find_by(suggestion_id: params[:id], user_id: session[:user_id])
+    render json: vote
   end
 
-  # POST /votes
+  # POST /suggestions/:id/vote
   def create
-    @vote = Vote.new(vote_params)
-
-    if @vote.save
-      render json: @vote, status: :created, location: @vote
-    else
-      render json: @vote.errors, status: :unprocessable_entity
+    vote = Vote.find_or_create_by(suggestion_id: params[:id], user_id: session[:user_id]) do |vote|
+      vote.direction = params[:direction]
     end
+
+    vote.direction = params[:direction]
+    # something to check if already exists, and if it does....
+    #
+    if not vote.valid?
+      render json: { :ok => false, :error => vote.errors.full_messages[0] }, status: 400
+      return
+    end
+    if not vote.save
+      render json: { :ok => false, :error => "Failed to save vote" }, status: 500
+      return
+    end
+    render json: vote
   end
 
-  # PATCH/PUT /votes/1
-  def update
-    vote = Vote.find(params[:id])
-    if @vote.update(vote_params)
-      render json: @vote
-    else
-      render json: @vote.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /votes/1
+  # DELETE /suggestions/:id/delete
   def destroy
-    @vote.destroy
+    vote = Vote.find_by(suggestion_id: params[:id], user_id: session[:user_id])
+    vote.destroy
+    render json: vote
   end
 end

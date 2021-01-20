@@ -74,6 +74,7 @@ ActiveRecord::Schema.define(version: 2021_01_11_215130) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["suggestion_id"], name: "index_votes_on_suggestion_id"
+    t.index ["user_id", "suggestion_id"], name: "index_votes_on_user_id_and_suggestion_id", unique: true
     t.index ["user_id"], name: "index_votes_on_user_id"
   end
 
