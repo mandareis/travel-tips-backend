@@ -2,15 +2,18 @@ class SuggestionsController < ApplicationController
   before_action :check_auth, only: [:create]
   # GET /suggestions
   def index
-    suggestions = Suggestion.all
-
-    render json: suggestions
+    # suggestions = Suggestion.all
+    suggestions = Suggestion.includes(:place).joins(:place).where(places: { city: params[:city] })
+    if not suggestions
+      render json: { :ok => false, :error => "Failed to find place." }, status: 400
+    end
+    render json: suggestions.to_json(:include => [:place])
   end
 
   # GET /suggestions/1
   def show
-    suggestion = Suggestion.find(params[:id])
-    render json: suggestion
+    suggestion = Suggestion.includes(:place).find(params[:id])
+    render json: suggestion.to_json(:include => [:place])
   end
 
   # POST /suggestions

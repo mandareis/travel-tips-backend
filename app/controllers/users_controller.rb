@@ -17,7 +17,7 @@ class UsersController < ApplicationController
     render json: user, except: [:password_digest]
   end
 
-  # PATCH/PUT /user/1/change_password for user's password
+  # PATCH/PUT /user/change_password for user's password
   def change_password
     user = User.find(session[:user_id])
     if not user.authenticate(params[:old_password])

@@ -38,7 +38,8 @@ class SessionsController < ApplicationController
       "email" => params[:email],
       "password" => params[:password],
     })
-    if not user
+    ok = user.save
+    if not ok
       render json: { :ok => false, :error => user.errors.full_messages[0] }, status: 400
       return
     end

@@ -21,8 +21,7 @@ class VotesController < ApplicationController
     end
 
     vote.direction = params[:direction]
-    # something to check if already exists, and if it does....
-    #
+
     if not vote.valid?
       render json: { :ok => false, :error => vote.errors.full_messages[0] }, status: 400
       return

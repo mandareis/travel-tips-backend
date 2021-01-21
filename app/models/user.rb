@@ -4,5 +4,5 @@ class User < ApplicationRecord
   has_many :votes
   has_many :comments
   has_many :likes, through: :comments
-  validates :email, :username, uniqueness: :true
+  validates :email, :username, uniqueness: true
 end

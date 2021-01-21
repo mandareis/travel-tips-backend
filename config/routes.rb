@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :places, only: [:index, :show, :create]
   resources :likes
   resources :comments
+  put "/users/change-password", to: "users#change_password"
   resources :users, only: [:update, :destroy]
   get "/sessions", to: "sessions#index"
   post "/sessions", to: "sessions#create"
@@ -15,6 +16,5 @@ Rails.application.routes.draw do
   get "/_bootstrap_data.js", to: "sessions#bootstrap_js_data"
   get "/_bootstrap_data.js", to: "suggestions#bootstrap_js_data" #new line
   get "/sessions/dump", to: "sessions#dump_session"
-  put "/users/change-password", to: "users#change_password"
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
