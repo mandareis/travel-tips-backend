@@ -7,9 +7,10 @@ class VotesController < ApplicationController
     render json: votes
   end
 
-  # # GET /suggestions/:id/vote
+  #sum query (suggestion_id, direction)
+
+  # GET /suggestions/:id/vote
   def show
-    pp params
     vote = Vote.find_by(suggestion_id: params[:id], user_id: session[:user_id])
     render json: vote
   end

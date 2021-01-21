@@ -16,6 +16,13 @@ class SuggestionsController < ApplicationController
     render json: suggestion.to_json(:include => [:place])
   end
 
+  #get_votes
+  def get_votes
+    vote = Vote.where(suggestion_id: params[:id]).sum(:direction)
+
+    render json: vote
+  end
+
   # POST /suggestions
   def create
     place = Place.new do |p|

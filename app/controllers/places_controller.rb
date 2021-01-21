@@ -19,17 +19,6 @@ class PlacesController < ApplicationController
     render json: place
   end
 
-  # # POST /places
-  # def create
-  #   @place = Place.new(place_params)
-
-  #   if @place.save
-  #     render json: @place, status: :created, location: @place
-  #   else
-  #     render json: @place.errors, status: :unprocessable_entity
-  #   end
-  # end
-
   # PATCH/PUT /places/1
   def update
     @place = Place.find(params[:id])

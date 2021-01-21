@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resources :suggestions, only: [:index, :show, :create]
   get "/suggestions/:id/vote", to: "votes#show"
   post "/suggestions/:id/vote", to: "votes#create"
+  get "/suggestions/:id/get_votes", to: "suggestions#get_votes"
   delete "/suggestions/:id/vote", to: "votes#destroy"
   get "/places/countries-list", to: "places#countries_list"
   resources :places, only: [:index, :show, :create]
