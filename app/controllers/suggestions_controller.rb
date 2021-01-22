@@ -4,7 +4,8 @@ class SuggestionsController < ApplicationController
   def index
     # suggestions = Suggestion.all
 
-    suggestions = Suggestion.includes(:place).joins(:place).where("lower(places.city) = ?", params[:city].downcase)
+    suggestions = Suggestion.paginate(page: params[:page], per_page: 5).includes(:place).joins(:place).where("lower(places.city) = ?", params[:city].downcase)
+
     if not suggestions
       render json: { :ok => false, :error => "Failed to find place." }, status: 400
     end
