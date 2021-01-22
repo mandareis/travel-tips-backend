@@ -35,11 +35,12 @@ class UsersController < ApplicationController
   # DELETE /users/1
   def destroy
     begin
+      ghost = User.find_by(username: "ghost")
       user = User.find(session[:user_id])
-      suggestion = Suggestion.where("user_id = ?", params[:id]).update_all(user_id: "21")
-      vote = Vote.where("user_id = ?", params[:id]).update_all(user_id: "21")
-      comment = Comment.where("user_id = ?", params[:id]).update_all(user_id: "21")
-      like = Like.where("user_id = ?", params[:id]).update_all(user_id: "21")
+      suggestion = Suggestion.where("user_id = ?", params[:id]).update_all(user_id: ghost.id)
+      vote = Vote.where("user_id = ?", params[:id]).update_all(user_id: ghost.id)
+      comment = Comment.where("user_id = ?", params[:id]).update_all(user_id: ghost.id)
+      like = Like.where("user_id = ?", params[:id]).update_all(user_id: ghost.id)
     rescue
       render json: { :error => "User Not Found" }, status: 404
     else

@@ -15,7 +15,6 @@ Rails.application.routes.draw do
   delete "sessions", to: "sessions#destroy"
   post "/sessions/register", to: "sessions#register"
   get "/_bootstrap_data.js", to: "sessions#bootstrap_js_data"
-  get "/_bootstrap_data.js", to: "suggestions#bootstrap_js_data" #new line
   get "/sessions/dump", to: "sessions#dump_session"
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

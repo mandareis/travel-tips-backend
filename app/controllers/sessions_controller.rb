@@ -51,6 +51,7 @@ class SessionsController < ApplicationController
     render json: session
   end
 
+  # loads user
   def bootstrap_js_data
     data = nil
     if session[:user_id]
