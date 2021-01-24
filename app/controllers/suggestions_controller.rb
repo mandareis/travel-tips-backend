@@ -3,7 +3,10 @@ class SuggestionsController < ApplicationController
   # GET /suggestions
   def index
     # suggestions = Suggestion.all
-
+    if not params[:city]
+      render json: { :ok => false, :error => "'city' param MUST be specified" }, status: 400
+      return
+    end
     suggestions = Suggestion.paginate(page: params[:page], per_page: 5).includes(:place).joins(:place).where("lower(places.city) = ?", params[:city].downcase)
 
     if not suggestions
