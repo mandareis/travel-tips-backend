@@ -24,12 +24,12 @@ class UsersController < ApplicationController
       render json: { :error => "Password incorrect" }, status: 401
       return
     end
-    user.update({
-      "password" => params[:new_password],
-    })
-    if user
-      render json: user, except: [:password_digest]
+    result = user.change_password(params[:new_password])
+    if not result 
+      render json: {:error => user.errors.full_messages[1] }, status: 400
+      return
     end
+    render json: user, except: [:password_digest]
   end
 
   # DELETE /users/1
