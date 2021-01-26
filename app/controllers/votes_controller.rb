@@ -1,5 +1,6 @@
 class VotesController < ApplicationController
   before_action :check_auth, only: [:create]
+  
   # GET /votes
   def index
     votes = Vote.where(user_id: session[:user_id])
