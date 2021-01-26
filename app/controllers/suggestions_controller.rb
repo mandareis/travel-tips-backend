@@ -30,6 +30,10 @@ class SuggestionsController < ApplicationController
 
   # POST /suggestions
   def create
+    if params[:description].length > 1_500
+      render json: { :ok => false, :error => "Exceed character limit of description" }, status: 400
+      return
+    end
     place = Place.new do |p|
       p.continent = params[:place][:continent]
       p.country = params[:place][:country]
