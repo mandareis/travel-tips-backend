@@ -11,15 +11,11 @@ class User < ApplicationRecord
   has_many :comments
   has_many :likes, through: :comments
   validates :username, :email, uniqueness: true
-  validates :password, format: PASSWORD_REQUIREMENTS, on: [:change_password, :create]
+  validates :password, format: { with: PASSWORD_REQUIREMENTS, message: "must be minimum of 6 characters. 
+  Contain an  uppercase letter. 
+  Contain a number." }, on: [:change_password, :create]
   validates :email, format: { with: /\A[^@\s]+@[^@\s]+[a-zA-Z0-9]+\z/ }  
-  validates :username, format: {with: /\A[a-zA-Z0-9]+\z/ }
-  # validates :password, presence: { message: "Must be minimum of 6 characters. Contains uppercase letter. Contains a number." }
-
-  # validate do  |password|
-  # errors.add :base, :password, :requirements, message: 
-  # "Must be minimum of 6 characters. Contains uppercase letter. Contains a number."
-  # end 
+  validates :username, format: {with: /\A[a-zA-Z0-9]+\z/ } 
 
   def change_password(password)
     with_transaction_returning_status do

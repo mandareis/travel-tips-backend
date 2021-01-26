@@ -64,19 +64,4 @@ class SuggestionsController < ApplicationController
     end
     render json: suggestion
   end
-
-  # PATCH/PUT /suggestions/1
-  # def update
-  #   suggestion = Suggestion.find(params[:id])
-  #   if @suggestion.update(suggestion_params)
-  #     render json: @suggestion
-  #   else
-  #     render json: @suggestion.errors, status: :unprocessable_entity
-  #   end
-  # end
-
-  # # DELETE /suggestions/1
-  # def destroy
-  #   @suggestion.destroy
-  # end
 end

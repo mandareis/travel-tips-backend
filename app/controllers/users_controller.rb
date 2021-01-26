@@ -21,7 +21,7 @@ class UsersController < ApplicationController
   def change_password
     user = User.find(session[:user_id])
     if not user.authenticate(params[:old_password])
-      render json: { :error => "Password incorrect" }, status: 401
+      render json: { :error => user.errors.full_messages }, status: 401
       return
     end
     result = user.change_password(params[:new_password])
