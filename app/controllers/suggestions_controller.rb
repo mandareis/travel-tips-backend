@@ -2,7 +2,6 @@ class SuggestionsController < ApplicationController
   before_action :check_auth, only: [:create]
   # GET /suggestions
   def index
-    # suggestions = Suggestion.all
     if not params[:city]
       render json: { :ok => false, :error => "'city' param MUST be specified" }, status: 400
       return
@@ -14,7 +13,7 @@ class SuggestionsController < ApplicationController
     end
     render json: suggestions.to_json(:include => [:place])
   end
-
+# GET /suggestions/upvoted (all suggestions voted up by specific user)
   def upvoted
     suggestions = Suggestion.includes(:place).joins(:votes).where("votes.direction = 1 AND votes.user_id = ?", session[:user_id])
     render json: suggestions.to_json(:include => [:place])

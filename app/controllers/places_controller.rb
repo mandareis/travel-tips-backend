@@ -1,5 +1,5 @@
 class PlacesController < ApplicationController
-  before_action :check_auth, only: [:update, :destroy]
+  before_action :check_auth
   skip_before_action :check_auth, only: [:countries_list]
 
   # GET /places
@@ -8,29 +8,9 @@ class PlacesController < ApplicationController
 
     render json: places
   end
-
+#GET /places/countries-list
   def countries_list
     render json: ISO3166::Country.all.map { |c| { :country => c.name, :code => c.alpha2, :continent => c.region } }
   end
 
-  # GET /places/1
-  def show
-    place = Place.find(params[:id])
-    render json: place
-  end
-
-  # PATCH/PUT /places/1
-  def update
-    @place = Place.find(params[:id])
-    if @place.update(place_params)
-      render json: @place
-    else
-      render json: @place.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /places/1
-  def destroy
-    @place.destroy
-  end
 end

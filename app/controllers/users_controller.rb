@@ -32,17 +32,17 @@ class UsersController < ApplicationController
     render json: user, except: [:password_digest]
   end
 
-  # DELETE /users/1
+  # DELETE /users
   def destroy
     begin
       ghost = User.find_by(username: "ghost")
       user = User.find(session[:user_id])
-      suggestion = Suggestion.where("user_id = ?", params[:id]).update_all(user_id: ghost.id)
-      vote = Vote.where("user_id = ?", params[:id]).update_all(user_id: ghost.id)
-      comment = Comment.where("user_id = ?", params[:id]).update_all(user_id: ghost.id)
-      like = Like.where("user_id = ?", params[:id]).update_all(user_id: ghost.id)
-    rescue
-      render json: { :error => "User Not Found" }, status: 404
+      suggestion = Suggestion.where("user_id = ?", user.id).update_all(user_id: ghost.id)
+      vote = Vote.where("user_id = ?", user.id).destroy_all
+      comment = Comment.where("user_id = ?", user.id).update_all(user_id: ghost.id)
+      like = Like.where("user_id = ?", user.id).update_all(user_id: ghost.id)
+    rescue Exception => error
+      render json: { :error => "Error occured: #{error.to_s}" }, status: 500
     else
       user.destroy
       render json: user
