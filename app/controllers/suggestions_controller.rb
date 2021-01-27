@@ -16,8 +16,8 @@ class SuggestionsController < ApplicationController
   end
 
   def upvoted
-    suggestions = Suggestion.joins(:votes).where("votes.direction = 1 AND votes.user_id = ?", session[:user_id])
-    render json: suggestions
+    suggestions = Suggestion.includes(:place).joins(:votes).where("votes.direction = 1 AND votes.user_id = ?", session[:user_id])
+    render json: suggestions.to_json(:include => [:place])
   end
 
   # GET /suggestions/1
