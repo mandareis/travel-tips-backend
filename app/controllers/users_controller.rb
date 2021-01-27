@@ -26,7 +26,7 @@ class UsersController < ApplicationController
     end
     result = user.change_password(params[:new_password])
     if not result 
-      render json: {:error => user.errors.full_messages }, status: 400
+      render json: {:error => user.errors.full_messages[0] }, status: 400
       return
     end
     render json: user, except: [:password_digest]
