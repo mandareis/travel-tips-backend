@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "/suggestions/upvoted", to: "suggestions#upvoted"
   resources :suggestions, only: [:index, :show, :create]
   get "/suggestions/:id/vote", to: "votes#show"
   post "/suggestions/:id/vote", to: "votes#create"
