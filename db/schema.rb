@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_11_215130) do
+ActiveRecord::Schema.define(version: 2021_01_28_052750) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,12 +38,19 @@ ActiveRecord::Schema.define(version: 2021_01_11_215130) do
     t.string "continent", null: false
     t.string "country", null: false
     t.string "name", null: false
-    t.string "city", null: false
+    t.string "city"
     t.string "admin_area"
     t.string "neighborhood"
     t.float "gps_coordinate"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "suggestion_scores", force: :cascade do |t|
+    t.bigint "suggestion_id", null: false
+    t.integer "score"
+    t.index ["suggestion_id"], name: "index_suggestion_scores_on_suggestion_id"
+    t.index ["suggestion_id"], name: "index_suggestion_scores_on_suggestion_id_uniq", unique: true
   end
 
   create_table "suggestions", force: :cascade do |t|
@@ -82,6 +89,7 @@ ActiveRecord::Schema.define(version: 2021_01_11_215130) do
   add_foreign_key "comments", "users"
   add_foreign_key "likes", "comments"
   add_foreign_key "likes", "users"
+  add_foreign_key "suggestion_scores", "suggestions"
   add_foreign_key "suggestions", "places"
   add_foreign_key "suggestions", "users"
   add_foreign_key "votes", "suggestions"
