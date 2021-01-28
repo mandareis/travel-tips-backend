@@ -10,7 +10,7 @@ class SuggestionsController < ApplicationController
       .paginate(page: params[:page], per_page: 5)
       .includes(:place, :suggestion_score)
       .joins(:place, :suggestion_score)
-      .where("lower(places.city) = ?", params[:city].downcase)
+      .where("lower(places.city) = ?", params[:city].downcase.strip)
       .order("suggestion_scores.score DESC")
 
     # # get all suggestions
