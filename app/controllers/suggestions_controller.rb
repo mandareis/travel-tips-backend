@@ -70,7 +70,6 @@ class SuggestionsController < ApplicationController
     suggestion = Suggestion.new do |s|
       s.title = params[:title]
       s.description = params[:description]
-      s.labels = params[:labels]
       s.user_id = session[:user_id]
       s.place = place
     end
@@ -83,6 +82,13 @@ class SuggestionsController < ApplicationController
       render json: { :ok => false, :error => "Failed to save suggestion" }, status: 500
       return
     end
+
+    score = SuggestionScore.new(suggestion_id: suggestion.id, score: 0)
+    if not score.save
+      render json: { :ok => false, :error => "Failed to save suggestion: #{score.errors.full_messages.join("; ")}" }, status: 500
+      return
+    end
+
     render json: suggestion
   end
 end
