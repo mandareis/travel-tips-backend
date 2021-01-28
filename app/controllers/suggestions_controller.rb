@@ -6,10 +6,15 @@ class SuggestionsController < ApplicationController
       render json: { :ok => false, :error => "'city' param MUST be specified" }, status: 400
       return
     end
-    suggestions = Suggestion.paginate(page: params[:page], per_page: 5).includes(:place).joins(:place).where("lower(places.city) = ?", params[:city].downcase)
- 
-  # # get all suggestions
-  #   total = Suggestion.joins(:place).where("lower(places.city) = ?", params[:city].downcase).count
+    suggestions = Suggestion
+      .paginate(page: params[:page], per_page: 5)
+      .includes(:place, :suggestion_score)
+      .joins(:place, :suggestion_score)
+      .where("lower(places.city) = ?", params[:city].downcase)
+      .order("suggestion_scores.score DESC")
+
+    # # get all suggestions
+    #   total = Suggestion.joins(:place).where("lower(places.city) = ?", params[:city].downcase).count
 
     if not suggestions
       render json: { :ok => false, :error => "Failed to find place." }, status: 400
@@ -17,11 +22,11 @@ class SuggestionsController < ApplicationController
     end
     render json: {
       next_page: suggestions.next_page != nil,
-      data: suggestions
-    }, :include => [:place]
+      data: suggestions,
+    }, :include => [:place, :suggestion_score]
   end
- 
-# GET /suggestions/upvoted (all suggestions voted up by specific user)
+
+  # GET /suggestions/upvoted (all suggestions voted up by specific user)
   def upvoted
     suggestions = Suggestion.includes(:place).joins(:votes).where("votes.direction = 1 AND votes.user_id = ?", session[:user_id])
     render json: suggestions.to_json(:include => [:place])
@@ -29,8 +34,8 @@ class SuggestionsController < ApplicationController
 
   # GET /suggestions/1
   def show
-    suggestion = Suggestion.includes(:place).find(params[:id])
-    render json: suggestion.to_json(:include => [:place])
+    suggestion = Suggestion.includes(:place, :suggestion_score).find(params[:id])
+    render json: suggestion.to_json(:include => [:place, :suggestion_score])
   end
 
   #get_votes
