@@ -7,12 +7,20 @@ class SuggestionsController < ApplicationController
       return
     end
     suggestions = Suggestion.paginate(page: params[:page], per_page: 5).includes(:place).joins(:place).where("lower(places.city) = ?", params[:city].downcase)
+ 
+  # # get all suggestions
+  #   total = Suggestion.joins(:place).where("lower(places.city) = ?", params[:city].downcase).count
 
     if not suggestions
       render json: { :ok => false, :error => "Failed to find place." }, status: 400
+      return
     end
-    render json: suggestions.to_json(:include => [:place])
+    render json: {
+      next_page: suggestions.next_page != nil,
+      data: suggestions
+    }, :include => [:place]
   end
+ 
 # GET /suggestions/upvoted (all suggestions voted up by specific user)
   def upvoted
     suggestions = Suggestion.includes(:place).joins(:votes).where("votes.direction = 1 AND votes.user_id = ?", session[:user_id])
